@@ -31,12 +31,16 @@ public class MapGenerator {
         }
     }
 
-    public void displayBrick(Graphics2D g, int j, int i) {
+    private void displayBrick(Graphics2D g, int j, int i) {
         g.setColor(Color.white);
-        g.fillRect(j * brickWidth + 80, i * brickHeight, brickWidth, brickHeight);
+        g.fillRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
         g.setStroke(new BasicStroke(3));
         g.setColor(Color.black);
-        g.drawRect(j * brickWidth + 80, i * brickHeight, brickWidth, brickHeight);
+        g.drawRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
+    }
+
+    protected void setBrickValue(int value, int row, int col) {
+        map[row][col] = value;
     }
 
 }

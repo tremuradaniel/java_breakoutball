@@ -14,7 +14,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private int totalBricks = 21;
     private Timer timer;
-    private int delay = 1;
+    private int delay = 8;
 
     private static final int PLAYER_SPEED = 20;
 
@@ -93,6 +93,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     private void ballMovement() {
         if (play) {
             if(platformBallCollision()) ballBouncesOffPlatform();
+            handleBallBricksCollision();
             ballX += ballXdir;
             ballY += ballYdir;
             if (ballX < 0) {
@@ -107,6 +108,32 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         }
     }
 
+    private void handleBallBricksCollision() {
+        A: for (int i = 0; i < map.map.length; i++) {
+            for (int j = 0; j < map.map[0].length; j++) {
+                boolean brickIsVisible = map.map[i][j] > 0;
+                if (brickIsVisible) {
+                    // create rectangle masks for ball and bricks in order to calculate collision
+                    int brickX = j * map.brickWidth + 80;
+                    int brickY = i * map.brickHeight + 50;
+                    int brickWidth = map.brickWidth;
+                    int brickHeight = map.brickHeight;
+                    Rectangle brickRect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+                    Rectangle ballRect = new Rectangle(ballX, ballY, 20, 20);
+                    if (ballRect.intersects(brickRect)) {
+                        map.setBrickValue(0, i, j);
+                        totalBricks--;
+                        score += 5;
+                        if (ballX + 19 <= brickRect.x || ballX + 1 >= brickRect.x + brickRect.width) {
+                            ballXdir = -ballXdir;
+                        } else ballYdir = -ballYdir;
+                        break A;
+                    }
+                }
+            }
+        }
+    }
+
     private void moveRight() {
         Boolean outOfBounds = playerX >= RIGHT_BOUND;
         if (outOfBounds) playerX = RIGHT_BOUND;
@@ -117,7 +144,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     }
 
     private void moveLeft () {
-        Boolean outOfBounds = playerX <= LEFT_BOUND;
+        Boolean outOfBounds = playerX < LEFT_BOUND;
         if (outOfBounds) playerX = LEFT_BOUND;
         else {
             play = true;
