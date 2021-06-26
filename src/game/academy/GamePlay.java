@@ -60,6 +60,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
+        ballMovement();
         repaint();
     }
 
@@ -81,6 +82,22 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
         if(e.getKeyCode() == KeyEvent.VK_LEFT) {
             moveLeft();
+        }
+    }
+
+    private void ballMovement() {
+        if (play) {
+            ballX += ballXdir;
+            ballY += ballYdir;
+            if (ballX < 0) {
+                ballXdir = -ballXdir;
+            }
+            if (ballY < 0) {
+                ballYdir = -ballYdir;
+            }
+            if (ballX > 670) {
+                ballXdir = -ballXdir;
+            }
         }
     }
 
