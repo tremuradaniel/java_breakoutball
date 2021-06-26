@@ -14,7 +14,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private int totalBricks = 21;
     private Timer timer;
-    private int delay = 8;
+    private int delay = 1;
 
     private static final int PLAYER_SPEED = 20;
 
@@ -27,7 +27,10 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     private static final int RIGHT_BOUND = 600;
     private static final int LEFT_BOUND = 10;
 
+    private MapGenerator map;
+
     public GamePlay() {
+        map = new MapGenerator(3, 7);
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -39,6 +42,8 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         // background
         g.setColor(Color.BLACK);
         g.fillRect(1, 1, 692, 592);
+
+        map.draw((Graphics2D) g);
 
         // borders
         g.setColor(Color.yellow);
@@ -87,6 +92,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private void ballMovement() {
         if (play) {
+            if(platformBallCollision()) ballBouncesOffPlatform();
             ballX += ballXdir;
             ballY += ballYdir;
             if (ballX < 0) {
@@ -117,5 +123,15 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
             play = true;
             playerX -= PLAYER_SPEED;
         }
+    }
+
+    private boolean platformBallCollision() {
+        return (new Rectangle(ballX, ballY, 20, 20))
+                .intersects(
+                (new Rectangle(playerX, 550, 100, 8)));
+    }
+
+    private void ballBouncesOffPlatform() {
+        ballYdir = -ballYdir;
     }
 }
