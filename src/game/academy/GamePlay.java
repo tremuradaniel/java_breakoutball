@@ -64,6 +64,8 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         g.setColor(Color.yellow);
         g.fillOval(ballX, ballY, 20, 20);
 
+        handleBallOutOfBounds(g);
+
         g.dispose();
     }
 
@@ -92,6 +94,25 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
         if(e.getKeyCode() == KeyEvent.VK_LEFT) {
             moveLeft();
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            handleEnterButton();
+        }
+    }
+
+    private void handleBallOutOfBounds(Graphics g){
+        boolean ballOutOfBounds = ballY > 570;
+        if (ballOutOfBounds) {
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+            g.setColor(Color.RED);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("Game over, Score: " + score, 190, 300);
+
+            g.setFont(new Font("serif", Font.BOLD, 20));
+            g.drawString("Press enter to restart", 230, 350);
         }
     }
 
@@ -165,5 +186,23 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private void ballBouncesOffPlatform() {
         ballYdir = -ballYdir;
+    }
+
+    private void handleEnterButton () {
+        boolean gameOver = !play;
+        if (gameOver) restartGame();
+    }
+
+    private void restartGame() {
+        play = true;
+        ballX = 120;
+        ballY = 350;
+        ballXdir = -1;
+        ballYdir = -2;
+        playerX = 310;
+        score = 0;
+        totalBricks = 21;
+        map = new MapGenerator(3, 7);
+        repaint();
     }
 }
