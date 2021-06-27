@@ -66,6 +66,8 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
         handleBallOutOfBounds(g);
 
+        handleGameWon(g);
+
         g.dispose();
     }
 
@@ -103,17 +105,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private void handleBallOutOfBounds(Graphics g){
         boolean ballOutOfBounds = ballY > 570;
-        if (ballOutOfBounds) {
-            play = false;
-            ballXdir = 0;
-            ballYdir = 0;
-            g.setColor(Color.RED);
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("Game over, Score: " + score, 190, 300);
-
-            g.setFont(new Font("serif", Font.BOLD, 20));
-            g.drawString("Press enter to restart", 230, 350);
-        }
+        if (ballOutOfBounds) gameOverScreen(g, "Game over!");
     }
 
     private void ballMovement() {
@@ -204,5 +196,22 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         totalBricks = 21;
         map = new MapGenerator(3, 7);
         repaint();
+    }
+
+    private void handleGameWon (Graphics g) {
+        boolean noBricksLeft = totalBricks == 0;
+        if (noBricksLeft) gameOverScreen(g, "You won!");
+    }
+
+    private void gameOverScreen (Graphics g, String message) {
+        play = false;
+        ballXdir = 0;
+        ballYdir = 0;
+        g.setColor(Color.RED);
+        g.setFont(new Font("serif", Font.BOLD, 30));
+        g.drawString(message + ", Score: " + score, 190, 300);
+
+        g.setFont(new Font("serif", Font.BOLD, 20));
+        g.drawString("Press enter to restart", 230, 350);
     }
 }
